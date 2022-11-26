@@ -1,0 +1,110 @@
+/*******************************************
+ *  Автор:Игнатьева Валерия.               *
+ *  Дата: 26.11.2022                       *
+ *  Группа: ПИ-221                         *
+ *  Название: Календарь                    *
+ *******************************************/
+
+//https://onlinegdb.com/hTjGlrvrJ
+ 
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+int dayOfTheWeek (int month, int year) {
+    /*
+  1) Определим  день недели, где:
+  0 - Понедельник
+  1 - Вторник
+  2 - Среда
+  3 - Четверг
+  4 - Пятница
+  5 - Суббота
+  6 - Воскресенье
+  */
+  int indexMonth[] = {6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+  int remains = year % 100;
+
+  int current;
+  current = remains / 12 + remains % 12 + remains % 12 / 4 + indexMonth[month - 1] + 1;
+  if ((year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) && month <= 2) --current;
+
+  return current % 7;  
+}
+//присвоем месяцу номер
+
+string getMonthName(int monthNumber)
+{
+  string months[] = {"January", "February", "March", "April", "May", "June",
+                       "July", "August", "September", "October", "November", "December"};
+ 
+  return (months[monthNumber]);
+}
+int numberOfDays (int monthNumber, int year) {
+    /*
+  2) Проверка на високосность начиная с нулевого месяца:
+  0 - январь
+  ...
+  11 - декабрь
+  */
+  int mDays [] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  int days;
+    
+  if(monthNumber == 1 ) {
+    if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) { 
+      days = 29; } else {
+      days = mDays[monthNumber];} 
+    } else {
+    days = mDays[monthNumber]; }
+    
+  return days;
+}
+void Calendar(int year) {
+    /*
+   3) Выводим сам календарь
+   */
+  cout << "~~~~~~~~~~~ Calendar - " <<  year  << " ~~~~~~~~~~~" << endl;
+  int days;
+  int current = dayOfTheWeek (1, year);
+    
+  for (int i = 0; i < 12; i++)
+  {
+    days = numberOfDays (i, year);
+    cout << "                           " << getMonthName (i) << endl;
+    cout << "_____________________________________" << endl;
+    cout << "  Sun  Mon  Tue  Wed  Thu  Fri  Sat"   << endl;
+    cout << "_____________________________________" << endl;
+ 
+        /* Введем соответствующие пробелы и некоторые переменные, где:
+        quantity - количество дней в неделе от 0 до 6 (0 - ПН; 6 - ВС)
+        elements - количество дней в месяце (от 1 до общего в месяце)*/
+    int quantity;
+    for (quantity = 0; quantity < current; ++quantity)
+      cout <<"     "; {
+    for (int elements = 1; elements <= days; ++elements) {
+      cout << setw(5) << elements; 
+      if (++ quantity > 6){
+        quantity = 0;
+        cout << endl;
+      }
+    }
+    if (quantity) {
+      cout << endl; 
+    }
+    current = quantity; }
+    }
+ 
+    return;
+}
+int main()
+{
+    int year;
+    cout << "enter the desired year  ";
+    cin  >> year ;
+    cout << endl;
+    Calendar(year);
+ 
+    return 0;
+}
